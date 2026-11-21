@@ -2,7 +2,7 @@ apiVersion: v2
 name: mylar3
 description: Deploys Mylar3, which finds, downloads and organises comics
 type: application
-version: 1.0.0
+version: 1.0.1
 appVersion: "v0.11.0-ls281"
 home: https://github.com/tonylea/helm-chart-mylar3
 sources:

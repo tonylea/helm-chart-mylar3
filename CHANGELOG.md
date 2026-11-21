@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.0.1](https://github.com/tonylea/helm-chart-mylar3/compare/v1.0.0...v1.0.1) (2026-11-21)
+
+### Bug Fixes
+
+* leave resource requests to whoever deploys the chart ([d1963b0](https://github.com/tonylea/helm-chart-mylar3/commit/d1963b07e91cf28509f4c50d27c4f6da652da146))
+
+### Documentation
+
+* keep only the comments that record a decision ([588d92c](https://github.com/tonylea/helm-chart-mylar3/commit/588d92c1fbeb5cd6da8beec6048eae6d692cf687))
+* keep the README to what the chart needs ([f60d39f](https://github.com/tonylea/helm-chart-mylar3/commit/f60d39fc2a7112c04bd76ae63e0112c7cf45c058))
+
 ## 1.0.0 (2026-11-21)
 
 ### Features
