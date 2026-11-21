@@ -1,6 +1,6 @@
 {
   "name": "helm-chart-mylar3",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Deploys Mylar3, which finds, downloads and organises comics",
   "private": true,
   "repository": {

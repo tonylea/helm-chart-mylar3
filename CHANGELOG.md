@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.0](https://github.com/tonylea/helm-chart-mylar3/compare/v1.0.1...v2.0.0) (2026-11-21)
+
+### ⚠ BREAKING CHANGES
+
+* persistence.data is now a list of named mounts, each at
+  /data/<name>, with at least one required.
+
+### Features
+
+* mount each data volume at /data/<name> ([d447d27](https://github.com/tonylea/helm-chart-mylar3/commit/d447d2713462d9543899dc1175194c8209496714))
+
+### Documentation
+
+* show the chart's download count ([67ee30d](https://github.com/tonylea/helm-chart-mylar3/commit/67ee30dab93b2cdc28a86591bb629912f222c3ba))
+
 ## [1.0.1](https://github.com/tonylea/helm-chart-mylar3/compare/v1.0.0...v1.0.1) (2026-11-21)
 
 ### Bug Fixes
