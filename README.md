@@ -19,7 +19,7 @@ It runs one replica:
 | `puid` | `1000` |
 | `pgid` | `1000` |
 | `timezone` | `UTC` |
-| `resources` | requests `cpu: 50m`, `memory: 192Mi`; no limits |
+| `resources` | none |
 | `persistence.config.existingClaim` | none; the chart creates a claim |
 | `persistence.config.storageClassName` | the cluster's default class |
 | `persistence.config.size` | `5Gi` |

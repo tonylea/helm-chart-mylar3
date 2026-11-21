@@ -6,10 +6,7 @@ pgid: 1000
 
 timezone: UTC
 
-resources:
-  requests:
-    cpu: 50m
-    memory: 192Mi
+resources: {}
 
 persistence:
   config:
