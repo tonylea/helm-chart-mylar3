@@ -16,7 +16,6 @@ helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 
-{{/* The claim behind a volume; takes the root context and the volume's name. */}}
 {{- define "mylar3.claimName" -}}
 {{- $root := index . 0 }}
 {{- $name := index . 1 }}

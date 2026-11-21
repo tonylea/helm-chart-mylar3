@@ -1,8 +1,6 @@
 image:
-  # Empty uses the chart's appVersion.
   tag: ""
 
-# The image starts as root, gives /config to this user and group, then runs Mylar3 as them.
 puid: 1000
 pgid: 1000
 
@@ -13,21 +11,17 @@ resources:
     cpu: 50m
     memory: 192Mi
 
-# Each is an existing claim, or else a ReadWriteOnce claim the chart creates.
-# An empty storageClassName uses the cluster's default class.
 persistence:
-  # Mylar3's config.ini, its SQLite database, logs and cover cache; not on a network share, which breaks SQLite's locking.
   config:
     existingClaim: ""
     storageClassName: ""
     size: 5Gi
-  # The comic library and the download folders, on one filesystem so imports are hardlinks or renames.
+  # The library and the download folders, on one filesystem so imports are hardlinks or renames.
   data:
     existingClaim: ""
     storageClassName: ""
     size: ""
 
-# A Gateway API HTTPRoute to the web UI.
 httpRoute:
   enabled: false
   parentRefs: []

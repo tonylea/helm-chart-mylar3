@@ -38,7 +38,6 @@ spec:
             - name: http
               containerPort: 8090
           # Mylar3 has no health endpoint that works without a login, so the probes check its port.
-          # Mylar3 checks and upgrades its database before it listens, so start-up gets 5 minutes.
           startupProbe:
             tcpSocket:
               port: http
