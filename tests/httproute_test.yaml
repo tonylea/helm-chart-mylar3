@@ -1,0 +1,37 @@
+suite: HTTPRoute
+release:
+  name: mylar3
+templates:
+  - templates/httproute.yaml
+tests:
+  - it: is off by default
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: routes the hostnames to Mylar3's Service
+    set:
+      httpRoute.enabled: true
+      httpRoute.parentRefs:
+        - name: gateway
+          namespace: gateway-system
+      httpRoute.hostnames: [mylar3.example.com]
+    asserts:
+      - equal:
+          path: spec
+          value:
+            parentRefs:
+              - name: gateway
+                namespace: gateway-system
+            hostnames: [mylar3.example.com]
+            rules:
+              - backendRefs:
+                  - name: mylar3
+                    port: 8090
+
+  - it: fails without a parent
+    set:
+      httpRoute.enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: httpRoute.parentRefs is required when httpRoute is enabled

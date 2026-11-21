@@ -1,0 +1,19 @@
+suite: Service
+release:
+  name: mylar3
+templates:
+  - templates/service.yaml
+tests:
+  - it: exposes Mylar3's port to the pod's selector labels
+    asserts:
+      - equal:
+          path: spec.selector
+          value:
+            app.kubernetes.io/name: mylar3
+            app.kubernetes.io/instance: mylar3
+      - equal:
+          path: spec.ports
+          value:
+            - name: http
+              port: 8090
+              targetPort: http

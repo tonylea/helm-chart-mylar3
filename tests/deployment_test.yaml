@@ -1,0 +1,144 @@
+suite: Deployment
+release:
+  name: mylar3
+templates:
+  - templates/deployment.yaml
+values:
+  - ../ci/kind-values.yaml
+tests:
+  - it: runs one replica of the chart's appVersion, stopping the old pod first
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 1
+      - equal:
+          path: spec.strategy.type
+          value: Recreate
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: lscr.io/linuxserver/mylar3:v0.11.0-ls281
+
+  - it: uses the image tag when one is set
+    set:
+      image.tag: v0.10.9-ls280
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: lscr.io/linuxserver/mylar3:v0.10.9-ls280
+
+  - it: leaves the chart's version off the pod, so a chart-only release doesn't restart it
+    chart:
+      version: 9.9.9
+    asserts:
+      - equal:
+          path: spec.template.metadata.labels
+          value:
+            app.kubernetes.io/name: mylar3
+            app.kubernetes.io/instance: mylar3
+            app.kubernetes.io/version: v0.11.0-ls281
+
+  - it: starts as root with the default seccomp profile, and no service links or API token
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext
+          value:
+            seccompProfile:
+              type: RuntimeDefault
+      - equal:
+          path: spec.template.spec.enableServiceLinks
+          value: false
+      - equal:
+          path: spec.template.spec.automountServiceAccountToken
+          value: false
+
+  - it: passes the user, group and timezone
+    set:
+      puid: 1026
+      pgid: 100
+      timezone: Europe/Berlin
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].env
+          value:
+            - name: PUID
+              value: "1026"
+            - name: PGID
+              value: "100"
+            - name: TZ
+              value: Europe/Berlin
+
+  - it: defaults the user, group and timezone
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].env
+          value:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: UTC
+
+  - it: probes Mylar3's port, giving start-up 5 minutes
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].startupProbe
+          value:
+            tcpSocket:
+              port: http
+            periodSeconds: 10
+            failureThreshold: 30
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe
+          value:
+            tcpSocket:
+              port: http
+            periodSeconds: 30
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe
+          value:
+            tcpSocket:
+              port: http
+
+  - it: requests CPU and memory, with no limits
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].resources
+          value:
+            requests:
+              cpu: 50m
+              memory: 192Mi
+
+  - it: mounts the chart's claims at /config and /data
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts
+          value:
+            - name: config
+              mountPath: /config
+            - name: data
+              mountPath: /data
+      - equal:
+          path: spec.template.spec.volumes
+          value:
+            - name: config
+              persistentVolumeClaim:
+                claimName: mylar3-config
+            - name: data
+              persistentVolumeClaim:
+                claimName: mylar3-data
+
+  - it: mounts existing claims when given
+    set:
+      persistence.config.existingClaim: my-config
+      persistence.data.existingClaim: my-data
+    asserts:
+      - equal:
+          path: spec.template.spec.volumes
+          value:
+            - name: config
+              persistentVolumeClaim:
+                claimName: my-config
+            - name: data
+              persistentVolumeClaim:
+                claimName: my-data
