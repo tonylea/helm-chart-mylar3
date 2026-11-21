@@ -118,29 +118,40 @@ tests:
               cpu: 50m
               memory: 192Mi
 
-  - it: mounts the chart's claims at /config and /data
+  - it: mounts /config, and each data mount at /data/<name>, from the chart's claims
     asserts:
       - equal:
           path: spec.template.spec.containers[0].volumeMounts
           value:
             - name: config
               mountPath: /config
-            - name: data
-              mountPath: /data
+            - name: data-downloads
+              mountPath: /data/downloads
+            - name: data-comics
+              mountPath: /data/comics
       - equal:
           path: spec.template.spec.volumes
           value:
             - name: config
               persistentVolumeClaim:
                 claimName: mylar3-config
-            - name: data
+            - name: data-downloads
               persistentVolumeClaim:
-                claimName: mylar3-data
+                claimName: mylar3-data-downloads
+            - name: data-comics
+              persistentVolumeClaim:
+                claimName: mylar3-data-comics
 
   - it: mounts existing claims when given
     set:
       persistence.config.existingClaim: my-config
-      persistence.data.existingClaim: my-data
+      persistence.data:
+        - name: downloads
+          existingClaim: my-downloads
+        - name: comics-1
+          existingClaim: my-comics-1
+        - name: comics-2
+          existingClaim: my-comics-2
     asserts:
       - equal:
           path: spec.template.spec.volumes
@@ -148,6 +159,27 @@ tests:
             - name: config
               persistentVolumeClaim:
                 claimName: my-config
-            - name: data
+            - name: data-downloads
               persistentVolumeClaim:
-                claimName: my-data
+                claimName: my-downloads
+            - name: data-comics-1
+              persistentVolumeClaim:
+                claimName: my-comics-1
+            - name: data-comics-2
+              persistentVolumeClaim:
+                claimName: my-comics-2
+
+  - it: fails without a data mount
+    set:
+      persistence.data: []
+    asserts:
+      - failedTemplate:
+          errorMessage: persistence.data needs at least one mount
+
+  - it: fails when a data mount has no name
+    set:
+      persistence.data:
+        - existingClaim: my-data
+    asserts:
+      - failedTemplate:
+          errorMessage: each persistence.data mount needs a name

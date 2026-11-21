@@ -16,9 +16,11 @@ It runs one replica, and stops the old pod before starting the new one, since tw
 | `persistence.config.existingClaim` | none; the chart creates a claim |
 | `persistence.config.storageClassName` | the cluster's default class |
 | `persistence.config.size` | `5Gi` |
-| `persistence.data.existingClaim` | none; the chart creates a claim |
-| `persistence.data.storageClassName` | the cluster's default class |
-| `persistence.data.size` | none; required unless `existingClaim` is set |
+| `persistence.data` | none; at least one mount required |
+| `persistence.data[].name` | required; mounted at `/data/<name>` |
+| `persistence.data[].existingClaim` | none; the chart creates a claim |
+| `persistence.data[].storageClassName` | the cluster's default class |
+| `persistence.data[].size` | none; required unless `existingClaim` is set |
 | `httpRoute.enabled` | `false` |
 | `httpRoute.parentRefs` | none; required when enabled |
 | `httpRoute.hostnames` | none |
@@ -27,7 +29,7 @@ It runs one replica, and stops the old pod before starting the new one, since tw
 
 - A storage class for the claims the chart creates, the cluster's default unless named.
   `/config` holds Mylar3's SQLite database, so it needs block storage, not a network share such as NFS, whose locking SQLite can't rely on.
-  A claim the chart creates is `ReadWriteOnce`, so sharing `/data` with a download client needs an existing claim.
+  A claim the chart creates is `ReadWriteOnce`, so sharing a data mount with a download client needs an existing claim.
   Mylar3's own documentation is in [its repo](https://github.com/MylarComics/mylar3).
 - The Gateway API's `HTTPRoute` CRD, when `httpRoute.enabled` is set.
 
@@ -42,7 +44,10 @@ helm install mylar3 mylar3/mylar3 --values my-values.yaml
 timezone: Europe/London
 persistence:
   data:
-    existingClaim: media
+    - name: downloads
+      existingClaim: downloads
+    - name: comics
+      existingClaim: comics
 ```
 
 ## Development
