@@ -12,8 +12,6 @@
     "package-lock.json"
   ],
   "words": [
-    "hardlink",
-    "hardlinks",
     "httproute",
     "kubeconform",
     "lscr",

@@ -1,3 +1,6 @@
 persistence:
   data:
-    size: 1Gi
+    - name: downloads
+      size: 1Gi
+    - name: comics
+      size: 1Gi
