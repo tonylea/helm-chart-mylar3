@@ -1,5 +1,7 @@
 # Mylar3 Helm Chart
 
+![Downloads](https://img.shields.io/github/downloads/tonylea/helm-chart-mylar3/total)
+
 Deploys [Mylar3](https://github.com/MylarComics/mylar3) from LinuxServer's image, [`lscr.io/linuxserver/mylar3`](https://github.com/linuxserver/docker-mylar3), the one Mylar3's README links to.
 
 It runs one replica, and stops the old pod before starting the new one, since two copies of Mylar3 can't share one SQLite database.
